@@ -1,0 +1,12 @@
+com/mydomain/finalthesisbackend/dto/AuthRequestDTO.class
+com/mydomain/finalthesisbackend/config/SecurityConfig.class
+com/mydomain/finalthesisbackend/service/CustomUserDetailsService.class
+com/mydomain/finalthesisbackend/FinalThesisBackendApplication.class
+com/mydomain/finalthesisbackend/controller/AuthController.class
+com/mydomain/finalthesisbackend/model/Address.class
+com/mydomain/finalthesisbackend/model/User.class
+com/mydomain/finalthesisbackend/dto/AuthResponseDTO.class
+com/mydomain/finalthesisbackend/utility/JwtUtil.class
+com/mydomain/finalthesisbackend/service/UserService.class
+com/mydomain/finalthesisbackend/service/AuthService.class
+com/mydomain/finalthesisbackend/repository/UserRepository.class
