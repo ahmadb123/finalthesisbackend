@@ -4,14 +4,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Address {
-    private String firstName;
-    private String lastName;
     private String streetName;
     private String city;
     private String state;
     private String postalCode;
     private String country;
-    private String emailAddress;
 
     // Getters
     public String getFirstName() {
