@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.mydomain.finalthesisbackend.model.Address;
 
 @Service
 public class AuthService {
@@ -45,7 +46,7 @@ public class AuthService {
         
         return jwtUtil.generateToken(authentication.getName());
     }
-    public void register(String username, String password) {
+    public void register(String username, String password, String emailAddress, String firstName, String lastName, Address address) {
         // Check if user already exists
         if (userRepository.findByusername(username).isPresent()) {
             throw new RuntimeException("User already exists");
@@ -56,8 +57,40 @@ public class AuthService {
         User user = new User();
         user.setusername(username);
         user.setPassword(encodedPassword);
-    
+        user.setEmailAddress(emailAddress);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setAddress(address);
         // Save user to database
+        userRepository.save(user);
+    }
+
+    public void updateAddress(String username, Address newAddress) {
+        // Find user by username
+        User user = userRepository.findByusername(username).orElseThrow(() -> new RuntimeException("User not found"));
+        
+        // Update address fields
+        Address address = user.getAddress();
+        if (address == null) {
+            address = new Address();
+        }
+        if (newAddress.getStreetName() != null) {
+            address.setStreetName(newAddress.getStreetName());
+        }
+        if (newAddress.getCity() != null) {
+            address.setCity(newAddress.getCity());
+        }
+        if (newAddress.getState() != null) {
+            address.setState(newAddress.getState());
+        }
+        if (newAddress.getPostalCode() != null) {
+            address.setPostalCode(newAddress.getPostalCode());
+        }
+        if (newAddress.getCountry() != null) {
+            address.setCountry(newAddress.getCountry());
+        }
+        
+        user.setAddress(address);
         userRepository.save(user);
     }
     

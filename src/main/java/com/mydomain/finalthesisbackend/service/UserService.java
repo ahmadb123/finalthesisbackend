@@ -15,12 +15,14 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User registerUser(String username, String password, String role, String emailAddress, Address address) {
+    public User registerUser(String username, String password, String role, String emailAddress, String firstName, String lastName, Address address) {
         User user = new User();
         user.setusername(username);
         user.setPassword(passwordEncoder.encode(password)); // Hash the password
         user.setRole(role);
         user.setEmailAddress(emailAddress);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         user.setAddress(address);
         return userRepository.save(user);
     }

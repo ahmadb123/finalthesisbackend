@@ -12,6 +12,8 @@ public class User{
     private String role; // customer/manager 
     private Address address;
     private String emailAddress;
+    private String firstName;
+    private String lastName;
     //getters
     public String getId(){
         return id;
@@ -57,5 +59,21 @@ public class User{
     }
     public void setAddress(Address address){
         this.address = address;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

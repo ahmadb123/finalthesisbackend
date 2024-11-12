@@ -1,13 +1,27 @@
 package com.mydomain.finalthesisbackend.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class Address {
+    private String firstName;
+    private String lastName;
     private String streetName;
     private String city;
     private String state;
     private String postalCode;
     private String country;
+    private String emailAddress;
 
     // Getters
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     public String getStreetName() {
         return streetName;
     }
@@ -28,7 +42,19 @@ public class Address {
         return country;
     }
 
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
     // Setters
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public void setStreetName(String streetName) {
         this.streetName = streetName;
     }
@@ -47,5 +73,9 @@ public class Address {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 }
