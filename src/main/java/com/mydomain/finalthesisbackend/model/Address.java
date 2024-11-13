@@ -10,14 +10,6 @@ public class Address {
     private String postalCode;
     private String country;
 
-    // Getters
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
 
     public String getStreetName() {
         return streetName;
@@ -39,18 +31,8 @@ public class Address {
         return country;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
-    }
 
     // Setters
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 
     public void setStreetName(String streetName) {
         this.streetName = streetName;
@@ -72,7 +54,4 @@ public class Address {
         this.country = country;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
 }

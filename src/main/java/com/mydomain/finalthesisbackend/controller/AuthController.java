@@ -1,5 +1,4 @@
 package com.mydomain.finalthesisbackend.controller;
-
 import com.mydomain.finalthesisbackend.dto.AuthRequestDTO;
 import com.mydomain.finalthesisbackend.dto.AuthResponseDTO;
 import com.mydomain.finalthesisbackend.model.Address;
@@ -7,6 +6,7 @@ import com.mydomain.finalthesisbackend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import com.mydomain.finalthesisbackend.utility.JwtUtil;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +17,9 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequestDTO authRequest){
@@ -45,14 +48,26 @@ public class AuthController {
     }
 
     @PostMapping("/update-address")
-    public ResponseEntity<?> updateAddress(@RequestParam String username, @RequestBody Address newAddress) {
+    public ResponseEntity<?> updateAddress (@RequestHeader("Authorization") String authHeader,  @RequestBody Address address) {
         try {
-            authService.updateAddress(username, newAddress);
+            // check authorization - 
+            if(authHeader == null || !authHeader.startsWith("Bearer")){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Missing or invalid Authorization header");
+                
+            }
+
+            // extract jwt token header - 
+            String token = authHeader.substring(7);
+            // extract username - 
+            String username = jwtUtil.extractUsername(token);
+            authService.updateAddress(username,address); 
             return ResponseEntity.ok("Address updated successfully");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
+    
 
     @GetMapping("/test")
     public ResponseEntity<String> test() {

@@ -65,34 +65,10 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    public void updateAddress(String username, Address newAddress) {
-        // Find user by username
-        User user = userRepository.findByusername(username).orElseThrow(() -> new RuntimeException("User not found"));
-        
-        // Update address fields
-        Address address = user.getAddress();
-        if (address == null) {
-            address = new Address();
-        }
-        if (newAddress.getStreetName() != null) {
-            address.setStreetName(newAddress.getStreetName());
-        }
-        if (newAddress.getCity() != null) {
-            address.setCity(newAddress.getCity());
-        }
-        if (newAddress.getState() != null) {
-            address.setState(newAddress.getState());
-        }
-        if (newAddress.getPostalCode() != null) {
-            address.setPostalCode(newAddress.getPostalCode());
-        }
-        if (newAddress.getCountry() != null) {
-            address.setCountry(newAddress.getCountry());
-        }
-        
+    public void updateAddress(String username, Address address) {
+        User user = userRepository.findByusername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         user.setAddress(address);
         userRepository.save(user);
     }
-    
-    
 }
