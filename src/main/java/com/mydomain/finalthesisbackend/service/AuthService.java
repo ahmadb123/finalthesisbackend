@@ -64,11 +64,18 @@ public class AuthService {
         // Save user to database
         userRepository.save(user);
     }
-
+    // retirve username from jwt token  
     public void updateAddress(String username, Address address) {
         User user = userRepository.findByusername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setAddress(address);
+        userRepository.save(user);
+    }
+
+    public void deleteAddress(String username){
+        User user = userRepository.findByusername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setAddress(null);
         userRepository.save(user);
     }
 }
