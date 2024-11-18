@@ -42,7 +42,9 @@ public class SecurityConfig {
             .cors().and()
             .authorizeRequests()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight requests
-                .requestMatchers("/api/auth/**").permitAll()           // Allow all requests to auth endpoints
+                .requestMatchers("/api/auth/**").permitAll()    
+                .requestMatchers("/api/cart/**").permitAll()       // Allow all requests to auth endpoints
+                .requestMatchers("/api/items/**").permitAll()      // Allow all requests to items endpoints
                 .anyRequest().authenticated()                          // Secure other endpoints
             .and()
             .authenticationProvider(authenticationProvider())

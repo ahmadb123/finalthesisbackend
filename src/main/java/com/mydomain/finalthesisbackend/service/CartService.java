@@ -28,11 +28,6 @@ public class CartService {
         return convertToCartDTO(cart);
     }
 
-
-    publi CartDTO getCartByUserId(String userId) {
-        Cart cart = cartRepository.findByUserId(userId);
-        return convertToCartDTO(cart);
-    }
     // Add item to cart and return CartDTO
     public CartDTO addToCart(String userId, Item item) {
         Cart cart = cartRepository.findByUserId(userId);

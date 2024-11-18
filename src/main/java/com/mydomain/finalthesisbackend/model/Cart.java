@@ -1,5 +1,8 @@
 package com.mydomain.finalthesisbackend.model;
-
+// import list library-
+import java.util.List;
+// import id library-
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 // cart class - 
@@ -10,7 +13,7 @@ public class Cart {
     private String id;
     private String userId; // username
     private List<CartItem> items; // list of items
-    prviate int count; // items in cart
+    private int count; // items in cart
     private double total; // total price of items in cart
 
     // getters and setters: 
@@ -18,7 +21,7 @@ public class Cart {
     public void setId(String id){
         this.id = id;
     }
-    public void set userId(String userId){
+    public void setUserId(String userId){
         this.userId = userId;
     }
     public void setItems(List<CartItem> items){
