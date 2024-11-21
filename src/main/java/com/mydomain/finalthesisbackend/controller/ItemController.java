@@ -51,5 +51,4 @@ public class ItemController {
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Test endpoint is accessible.");
     }
-    
 }

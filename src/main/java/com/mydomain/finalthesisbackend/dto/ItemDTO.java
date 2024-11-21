@@ -5,7 +5,7 @@ public class ItemDTO {
     private String name;
     private String description;
     private double price;
-
+    private String image;
     // Getters and Setters
     public String getId() {
         return id;
@@ -23,6 +23,13 @@ public class ItemDTO {
         this.name = name;
     }
 
+    public void setImage(String image){
+        this.image = image;
+    }
+
+    public String getImage(){
+        return image;
+    }
     public String getDescription() {
         return description;
     }

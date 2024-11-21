@@ -75,7 +75,13 @@ public class CartService {
             // Find the item by ID and remove it
             for (int i = 0; i < items.size(); i++) {
                 if (items.get(i).getId().equals(itemId)) {
-                    items.remove(i);
+                    CartItem item = items.get(i);
+                    if(item.getQuantity() > 1){
+                        // decrease quantity by 1
+                        item.setQuantity(item.getQuantity() - 1);
+                    } else {
+                        items.remove(i);    
+                    }
                     itemRemoved = true;
                     break;
                 }

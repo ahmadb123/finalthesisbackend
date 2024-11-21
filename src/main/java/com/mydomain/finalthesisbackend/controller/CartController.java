@@ -58,27 +58,30 @@ public class CartController{
             return ResponseEntity.ok(updatedCart);
         }
 
-    @DeleteMapping("/remove-item")
-    public ResponseEntity<CartDTO> removeItemFromCart(@RequestHeader("Authorization") String authHeader, @RequestBody ItemDTO itemDTO) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        
+    @DeleteMapping("/remove-item/{itemId}")
+        public ResponseEntity<CartDTO> removeItemFromCart(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable String itemId) {
+        
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+        
+            // Extract userId from the JWT token
+            String token = authHeader.substring(7);
+            String userId = jwtUtil.extractUsername(token);
+        
+            // Remove item from the cart for the authenticated user
+            CartDTO updatedCart = cartService.deleteFromCart(userId, itemId);
+            return ResponseEntity.ok(updatedCart);
         }
+        
 
-        // Extract userId from the JWT token
-        String token = authHeader.substring(7);
-        String userId = jwtUtil.extractUsername(token);
-
-        // Use the item ID from ItemDTO
-        String itemId = itemDTO.getId();
-
-        // Remove item from the cart for the authenticated user
-        CartDTO updatedCart = cartService.deleteFromCart(userId, itemId);
-        return ResponseEntity.ok(updatedCart);
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Test endpoint is accessible.");
-    }
+        @GetMapping("/test")
+        public ResponseEntity<String> test() {
+            return ResponseEntity.ok("Test endpoint is accessible.");
+        }
 
 }

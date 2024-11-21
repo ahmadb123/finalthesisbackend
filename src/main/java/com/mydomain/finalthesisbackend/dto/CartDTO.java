@@ -7,7 +7,7 @@ public class CartDTO {
     private List<CartItemDTO> items;
     private int count;
     private double total;
-
+    
     // Getters and Setters
     public String getUserId() {
         return userId;

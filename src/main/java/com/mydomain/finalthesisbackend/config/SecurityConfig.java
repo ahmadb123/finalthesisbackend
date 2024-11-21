@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()    
                 .requestMatchers("/api/cart/**").permitAll()       // Allow all requests to auth endpoints
                 .requestMatchers("/api/items/**").permitAll()      // Allow all requests to items endpoints
+                .requestMatchers("/images/**").permitAll()         // Allow all requests to images
                 .anyRequest().authenticated()                          // Secure other endpoints
             .and()
             .authenticationProvider(authenticationProvider())
