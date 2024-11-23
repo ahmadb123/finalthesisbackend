@@ -8,6 +8,7 @@ import com.mydomain.finalthesisbackend.model.CartItem;
 import com.mydomain.finalthesisbackend.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.mydomain.finalthesisbackend.repository.ItemRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +17,12 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
     private final CartRepository cartRepository;
+    private final ItemRepository itemRepository;
 
     @Autowired
-    public CartService(CartRepository cartRepository) {
+    public CartService(CartRepository cartRepository, ItemRepository itemRepository) {
         this.cartRepository = cartRepository;
+        this.itemRepository = itemRepository;
     }
 
     // Retrieve cart by user ID and convert to CartDTO
@@ -31,16 +34,23 @@ public class CartService {
     // Add item to cart and return CartDTO
     public CartDTO addToCart(String userId, Item item) {
         Cart cart = cartRepository.findByUserId(userId);
-
+    
         if (cart == null) {
             cart = new Cart();
             cart.setUserId(userId);
             cart.setItems(new ArrayList<>());
         }
-
+    
         List<CartItem> items = cart.getItems();
         boolean itemExists = false;
-
+    
+        // Fetch the full item from the database to get the image and other details
+        Item fullItem = itemRepository.findById(item.getId()).orElse(null);
+        if (fullItem == null) {
+            // Handle the case where the item is not found
+            throw new RuntimeException("Item not found with ID: " + item.getId());
+        }
+    
         // Check if the item already exists in the cart
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i).getId().equals(item.getId())) {
@@ -50,19 +60,26 @@ public class CartService {
                 break;
             }
         }
-
+    
         // If the item is new, add it to the cart
         if (!itemExists) {
-            CartItem newItem = new CartItem(item.getId(), item.getName(), item.getPrice(), 1);
+            CartItem newItem = new CartItem(
+                fullItem.getId(),
+                fullItem.getName(),
+                fullItem.getPrice(),
+                1,
+                fullItem.getImage()
+            );
             items.add(newItem);
         }
-
+    
         // Update cart totals and save
         updateCart(cart);
         cartRepository.save(cart);
-
+    
         return convertToCartDTO(cart);
     }
+    
 
     // Delete item from cart and return CartDTO
     public CartDTO deleteFromCart(String userId, String itemId) {
@@ -136,6 +153,7 @@ public class CartService {
         dto.setName(cartItem.getName());
         dto.setPrice(cartItem.getPrice());
         dto.setQuantity(cartItem.getQuantity());
+        dto.setImage(cartItem.getImage());
         return dto;
     }
 }

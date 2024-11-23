@@ -5,6 +5,7 @@ public class CartItemDTO {
     private String name;
     private double price;
     private int quantity;
+    private String image;
 
     // Getters and Setters
     public String getId() {
@@ -38,4 +39,13 @@ public class CartItemDTO {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public String getImage(){
+        return image;
+    }
+
+    public void setImage(String image){
+        this.image = image;
+    }
+
 }

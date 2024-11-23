@@ -5,13 +5,14 @@ public class CartItem {
     private String name;
     private double price;
     private int quantity;
-
+    private String image;
     // Constructor
-    public CartItem(String id, String name, double price, int quantity) {
+    public CartItem(String id, String name, double price, int quantity , String image) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+        this.image = image;
     }
 
     // Getters and Setters
@@ -45,5 +46,13 @@ public class CartItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getImage(){
+        return image;
+    }
+
+    public void setImage(String image){
+        this.image = image;
     }
 }
