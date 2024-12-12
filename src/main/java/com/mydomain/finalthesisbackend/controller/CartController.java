@@ -64,6 +64,21 @@ public class CartController{
         return ResponseEntity.ok(updatedCart);
     }
     
+    @PostMapping("/merge-guest-cart")
+    public ResponseEntity<CartDTO> mergeGuestCart(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody CartDTO guestCart) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String token = authHeader.substring(7);
+        String userId = jwtUtil.extractUsername(token);
+
+        CartDTO updatedCart = cartService.mergeGuestWithUserCart(guestCart.getUserId(), userId);
+        return ResponseEntity.ok(updatedCart);
+    }
 
         
     @DeleteMapping("/remove-item/{itemId}")
@@ -84,10 +99,12 @@ public class CartController{
             return ResponseEntity.ok(updatedCart);
         }
         
+        
 
         @GetMapping("/test")
         public ResponseEntity<String> test() {
             return ResponseEntity.ok("Test endpoint is accessible.");
         }
+
 
 }

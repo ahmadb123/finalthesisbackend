@@ -10,6 +10,7 @@ import com.mydomain.finalthesisbackend.utility.JwtUtil;
 import com.mydomain.finalthesisbackend.model.User;
 import com.mydomain.finalthesisbackend.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
+import com.mydomain.finalthesisbackend.dto.UserDTO;
 
 @RestController 
 @CrossOrigin(origins = "*") // Allow all origins, or specify your frontend's origin
@@ -25,11 +26,14 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequestDTO authRequest){
         String token = authService.authenticate(authRequest.getUsername(), authRequest.getPassword());
-        return ResponseEntity.ok(new AuthResponseDTO(token));
+        String userId = jwtUtil.extractUsername(token); // Extracts the username
+        return ResponseEntity.ok(new AuthResponseDTO(token, "user", userId)); 
     }
+
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody AuthRequestDTO authRequest) {
@@ -41,7 +45,8 @@ public class AuthController {
             address.setPostalCode(null);
             address.setCountry(null);
             
-            authService.register(authRequest.getUsername(), authRequest.getPassword(), authRequest.getEmailAddress(), authRequest.getFirstName(), authRequest.getLastName(), address);
+            authService.register(authRequest.getUsername(), authRequest.getPassword(), authRequest.getEmailAddress(), authRequest.getFirstName(), authRequest.getLastName(), 
+                                authRequest.getDateOfBirth(), authRequest.getGender(), authRequest.getPhoneNumber() , address);
             return ResponseEntity.ok("User registered successfully");
         } catch (RuntimeException e) {
             if (e.getMessage().equals("User already exists")) {
@@ -97,6 +102,40 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
+
+    // get user details - first, last and email address -
+
+    @GetMapping("/get-user-details")
+    public ResponseEntity<?> getUserDetails(@RequestHeader("Authorization") String authHeader) {
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
+            }
+
+            String token = authHeader.substring(7);
+            String username = jwtUtil.extractUsername(token);
+
+            User user = userRepository.findByusername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Create a DTO from the user entity
+            UserDTO userDetailsDTO = new UserDTO(
+                    user.getusername(),
+                    user.getPassword(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmailAddress(),
+                    user.getPhoneNumber(),
+                    user.getDateOfBirth(),
+                    user.getGender()
+            );
+
+            return ResponseEntity.ok(userDetailsDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
     /*
      * Delete address by ID 
      * TODO: 
@@ -127,6 +166,13 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/guest-login")
+    public ResponseEntity<?> guestLogin() {
+        String token = jwtUtil.generateGuestToken();
+        return ResponseEntity.ok(new AuthResponseDTO(token, "guest"));
+    }
+    
+    
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Test endpoint is accessible.");

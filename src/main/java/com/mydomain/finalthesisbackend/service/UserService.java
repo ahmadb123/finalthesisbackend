@@ -15,7 +15,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User registerUser(String username, String password, String role, String emailAddress, String firstName, String lastName, Address address) {
+    public User registerUser(String username, String password, String role, String emailAddress, String firstName, String lastName, String dateOfBirth, String gender, String phoneNumber , Address address) {
         User user = new User();
         user.setusername(username);
         user.setPassword(passwordEncoder.encode(password)); // Hash the password
@@ -24,6 +24,9 @@ public class UserService {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setAddress(address);
+        user.setDateOfBirth("");
+        user.setPhoneNumber("");
+        user.setGender("");
         return userRepository.save(user);
     }
 }

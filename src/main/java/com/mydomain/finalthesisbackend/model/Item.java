@@ -13,7 +13,8 @@ public class Item{
     private String description;
     private double price;
     private String image;
-
+    private static final int MAX_STOCK = 50; // max stock per item
+    private int stockQuantity; // current stock quantity
     public void setId(String id){
         this.id = id;
     }
@@ -31,6 +32,14 @@ public class Item{
         this.image = image;
     }
 
+    public void setStockQuantity(int stockQuantity){
+        if(stockQuantity <= MAX_STOCK){
+            this.stockQuantity = stockQuantity;
+        } else {
+            this.stockQuantity = MAX_STOCK;
+        }
+    }
+
     public String getImage(){
         return image;
     }
@@ -46,6 +55,10 @@ public class Item{
     }
     public double getPrice(){
         return price;
+    }
+
+    public int getStockQuantity(){
+        return stockQuantity;
     }
 
 }

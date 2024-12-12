@@ -1,24 +1,48 @@
 package com.mydomain.finalthesisbackend.utility;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
+import org.springframework.beans.factory.InitializingBean;
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtUtil implements InitializingBean {
 
-    // Use Keys.secretKeyFor to generate a key with sufficient strength for HS256
-    private final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    @Value("${jwt.secret}")
+    private String secret;
 
-    // Generate JWT token
+    @Value("${jwt.expiration}")
+    private long expirationTimeInMillis;
+
+    private SecretKey SECRET_KEY;
+
+    @Override
+    public void afterPropertiesSet() {
+        SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    // Generate JWT token for a regular user
     public String generateToken(String userName) {
         return Jwts.builder()
                 .setSubject(userName)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours expiration
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTimeInMillis))
+                .signWith(SECRET_KEY)
+                .compact();
+    }
+
+    // Generate JWT token for guest
+    public String generateGuestToken() {
+        long guestExpiration = 1800000L; // 30 minutes
+        return Jwts.builder()
+                .setSubject("guest")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + guestExpiration))
                 .signWith(SECRET_KEY)
                 .compact();
     }
@@ -35,17 +59,18 @@ public class JwtUtil {
 
     // Validate the JWT token
     public boolean isTokenValid(String token, String userName) {
-        return extractUsername(token).equals(userName) && !isTokenExpired(token);
+        String extractedUser = extractUsername(token);
+        return extractedUser.equals(userName) && !isTokenExpired(token);
     }
 
     // Check if the token is expired
     private boolean isTokenExpired(String token) {
-        return Jwts.parserBuilder()
+        Date expiration = Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getExpiration()
-                .before(new Date());
+                .getExpiration();
+        return expiration.before(new Date());
     }
 }

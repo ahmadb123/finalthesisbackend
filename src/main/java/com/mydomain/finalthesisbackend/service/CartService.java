@@ -9,7 +9,6 @@ import com.mydomain.finalthesisbackend.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mydomain.finalthesisbackend.repository.ItemRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,18 +48,24 @@ public class CartService {
         if (fullItem == null) {
             // Handle the case where the item is not found
             throw new RuntimeException("Item not found with ID: " + item.getId());
+        }else if(fullItem.getStockQuantity() < 1){
+            throw new RuntimeException("Item out of stock");
         }
     
         // Check if the item already exists in the cart
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i).getId().equals(item.getId())) {
                 // If item already exists, increase quantity by 1
-                items.get(i).setQuantity(items.get(i).getQuantity() + 1);
+                if (items.get(i).getQuantity() < fullItem.getStockQuantity()) {
+                    items.get(i).setQuantity(items.get(i).getQuantity() + 1);
+                    // decrease item stock 
+                    fullItem.setStockQuantity(fullItem.getStockQuantity() - 1);
+                    itemRepository.save(fullItem);
+                }
                 itemExists = true;
                 break;
             }
         }
-    
         // If the item is new, add it to the cart
         if (!itemExists) {
             CartItem newItem = new CartItem(
@@ -71,6 +76,8 @@ public class CartService {
                 fullItem.getImage()
             );
             items.add(newItem);
+            fullItem.setStockQuantity(fullItem.getStockQuantity() - 1);
+            itemRepository.save(fullItem);
         }
     
         // Update cart totals and save
@@ -84,41 +91,97 @@ public class CartService {
     // Delete item from cart and return CartDTO
     public CartDTO deleteFromCart(String userId, String itemId) {
         Cart cart = cartRepository.findByUserId(userId);
-
+    
         if (cart != null) {
             List<CartItem> items = cart.getItems();
             boolean itemRemoved = false;
-
-            // Find the item by ID and remove it
+    
             for (int i = 0; i < items.size(); i++) {
-                if (items.get(i).getId().equals(itemId)) {
-                    CartItem item = items.get(i);
-                    if(item.getQuantity() > 1){
-                        // decrease quantity by 1
-                        item.setQuantity(item.getQuantity() - 1);
-                    } else {
-                        items.remove(i);    
+                CartItem cartItem = items.get(i);
+    
+                if (cartItem.getId().equals(itemId)) {
+                    Item fullItem = itemRepository.findById(itemId).orElse(null);
+                    if (fullItem == null) {
+                        throw new RuntimeException("Item not found with ID: " + itemId);
                     }
+    
+                    // Reduce quantity or remove item
+                    if (cartItem.getQuantity() > 1) {
+                        cartItem.setQuantity(cartItem.getQuantity() - 1);
+                    } else {
+                        items.remove(i);
+                    }
+    
+                    // Increment stock in the inventory
+                    fullItem.setStockQuantity(fullItem.getStockQuantity() + 1);
+                    itemRepository.save(fullItem);
+    
                     itemRemoved = true;
                     break;
                 }
             }
-
-            // Update and save cart if an item was removed
+    
             if (itemRemoved) {
                 updateCart(cart);
                 cartRepository.save(cart);
             }
+        } else {
+            throw new RuntimeException("Cart not found for user ID: " + userId);
         }
-
+    
         return convertToCartDTO(cart);
-    }
+    }    
 
+    public CartDTO mergeGuestWithUserCart(String guestId, String userId) {
+        // fetch guest cart
+        Cart guestCart = cartRepository.findByUserId(guestId);
+        // fetch user cart
+        Cart userCart = cartRepository.findByUserId(userId);
+    
+        if (guestCart != null && userCart == null) {
+            // Assign guest cart to user
+            guestCart.setUserId(userId);
+            cartRepository.save(guestCart);
+            updateCart(guestCart);
+            return convertToCartDTO(guestCart);
+        } else if (guestCart != null && userCart != null) {
+            // Merge guest cart items into user cart
+            List<CartItem> guestItems = guestCart.getItems();
+            List<CartItem> userItems = userCart.getItems();
+    
+            for (CartItem guestItem : guestItems) {
+                boolean itemExists = false;
+                for (CartItem userItem : userItems) {
+                    if (guestItem.getId().equals(userItem.getId())) {
+                        userItem.setQuantity(userItem.getQuantity() + guestItem.getQuantity());
+                        itemExists = true;
+                        break;
+                    }
+                }
+                if (!itemExists) {
+                    userItems.add(guestItem);
+                }
+            }
+    
+            // Update user cart and clear guest cart
+            updateCart(userCart);
+            cartRepository.save(userCart);
+    
+            guestCart.setItems(new ArrayList<>());
+            updateCart(guestCart);
+            cartRepository.save(guestCart);
+    
+            return convertToCartDTO(userCart);
+        }
+    
+        // If no guest cart, return the user's cart or null
+        return userCart != null ? convertToCartDTO(userCart) : null;
+    }
+    
     // Helper method to update count and total in the cart
     private void updateCart(Cart cart) {
         int count = 0;
         double total = 0;
-
         for (int i = 0; i < cart.getItems().size(); i++) {
             count += cart.getItems().get(i).getQuantity();
             total += cart.getItems().get(i).getPrice() * cart.getItems().get(i).getQuantity();

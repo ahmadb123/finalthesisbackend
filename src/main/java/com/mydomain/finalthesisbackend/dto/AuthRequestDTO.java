@@ -3,12 +3,12 @@ package com.mydomain.finalthesisbackend.dto;
 public class AuthRequestDTO {
     private String username;
     private String password;
-    
     private String firstName;
-    
     private String lastName;
-    
     private String emailAddress;
+    private String dateOfBirth;
+    private String gender;
+    private String phoneNumber;
 
     public String getUsername() {
         return username;
@@ -30,6 +30,18 @@ public class AuthRequestDTO {
         return emailAddress;
     }
 
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -49,4 +61,17 @@ public class AuthRequestDTO {
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+    
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+    
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    
 }

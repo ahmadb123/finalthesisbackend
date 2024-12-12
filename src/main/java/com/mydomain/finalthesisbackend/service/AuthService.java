@@ -46,8 +46,7 @@ public class AuthService {
         
         return jwtUtil.generateToken(authentication.getName());
     }
-    public void register(String username, String password, String emailAddress, String firstName, String lastName, Address address) {
-        // Check if user already exists
+    public void register(String username, String password, String emailAddress, String firstName, String lastName, String dateOfBirth, String phoneNumber, String gender, Address address) {
         if (userRepository.findByusername(username).isPresent()) {
             throw new RuntimeException("User already exists");
         }
@@ -61,9 +60,13 @@ public class AuthService {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setAddress(address);
-        // Save user to database
+        user.setDateOfBirth(dateOfBirth != null ? dateOfBirth : null); // Explicitly set null if not provided
+        user.setPhoneNumber(phoneNumber != null ? phoneNumber : null); // Explicitly set null if not provided
+        user.setGender(gender != null ? gender : null); // Explicitly set null if not provided
+    
         userRepository.save(user);
     }
+    
     // retirve username from jwt token  
     public void updateAddress(String username, Address address) {
         User user = userRepository.findByusername(username)
