@@ -1,3 +1,9 @@
+/*
+ * CartDTO
+ * This class serves as Data Transfer object
+ * Transfers data for each cart found in the database. sends it to the frontend 
+ */
+
 package com.mydomain.finalthesisbackend.dto;
 
 import java.util.List;

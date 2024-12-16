@@ -1,3 +1,6 @@
+/*
+ * CartRepository extends mongorepository
+ */
 package com.mydomain.finalthesisbackend.repository;
 
 import com.mydomain.finalthesisbackend.model.Cart;

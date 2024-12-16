@@ -1,3 +1,7 @@
+/*
+ * Item controller returns current items found in the database.
+ */
+
 package com.mydomain.finalthesisbackend.controller;
 
 import com.mydomain.finalthesisbackend.model.Item;

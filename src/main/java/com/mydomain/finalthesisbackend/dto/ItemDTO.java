@@ -1,3 +1,7 @@
+/*
+ * ItemDTO
+ * responsible for transferring item data -> name,image, desc, price
+ */
 package com.mydomain.finalthesisbackend.dto;
 
 public class ItemDTO {

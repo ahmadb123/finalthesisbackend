@@ -1,3 +1,7 @@
+/*
+ * Favorite Data transfer data
+ * Responsible for transferring data from backend/database to frontend
+ */
 package com.mydomain.finalthesisbackend.dto;
 
 import java.util.List;

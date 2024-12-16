@@ -1,3 +1,9 @@
+/*
+ * CartItemDTO
+ * Serves as transfer data object
+ * each cart is an array of items. 
+ */
+
 package com.mydomain.finalthesisbackend.dto;
 
 public class CartItemDTO {

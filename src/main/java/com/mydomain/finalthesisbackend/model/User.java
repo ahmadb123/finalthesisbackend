@@ -1,3 +1,8 @@
+/*
+ * User model 
+ * collection for database - users
+ */
+
 package com.mydomain.finalthesisbackend.model;
 
 import org.springframework.data.annotation.Id;

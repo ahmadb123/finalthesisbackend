@@ -1,4 +1,11 @@
 // cart api - 
+
+/*
+ * Cart controller returns current cart, add item to cart, 
+ * if customer is logged as guest and add item to cart, 
+ * before checkout customer must sign in: merge controller, merges or adds
+ * guest cart to user cart once logged in
+ */
 package com.mydomain.finalthesisbackend.controller;
 import com.mydomain.finalthesisbackend.dto.CartDTO;
 import com.mydomain.finalthesisbackend.dto.ItemDTO;
@@ -64,6 +71,7 @@ public class CartController{
         return ResponseEntity.ok(updatedCart);
     }
     
+    // merge guest with logged in user cart
     @PostMapping("/merge-guest-cart")
     public ResponseEntity<CartDTO> mergeGuestCart(
             @RequestHeader("Authorization") String authHeader,
@@ -80,7 +88,7 @@ public class CartController{
         return ResponseEntity.ok(updatedCart);
     }
 
-        
+    // remove item from cart pass itemId
     @DeleteMapping("/remove-item/{itemId}")
         public ResponseEntity<CartDTO> removeItemFromCart(
             @RequestHeader("Authorization") String authHeader,

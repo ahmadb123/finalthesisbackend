@@ -1,3 +1,7 @@
+/*
+ * Favorite Service 
+ * Responsible for adding/deleting/loading functions for favortie data
+ */
 package com.mydomain.finalthesisbackend.service;
 
 import com.mydomain.finalthesisbackend.model.Favorite;

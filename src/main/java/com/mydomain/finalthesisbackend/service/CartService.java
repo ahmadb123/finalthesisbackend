@@ -1,3 +1,7 @@
+/*
+ * CartService service:
+ * Responsible for handling functions/deletion/adding/updating cart 
+ */
 package com.mydomain.finalthesisbackend.service;
 
 import com.mydomain.finalthesisbackend.dto.CartDTO;

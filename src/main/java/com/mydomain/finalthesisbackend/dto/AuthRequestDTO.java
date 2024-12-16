@@ -1,3 +1,10 @@
+/*
+ * Data transfer object class - 
+ * This class serves as a Data Transfer Object (DTO) for authentication and registration requests.
+ * Purpose: To transfer data between the client and the server in a structured and consistent manner.
+ * This DTO is primarily used in the `AuthController` for endpoints like login and registration.
+ */
+
 package com.mydomain.finalthesisbackend.dto;
 
 public class AuthRequestDTO {

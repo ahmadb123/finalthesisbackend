@@ -1,3 +1,8 @@
+/* 
+ * AuthController manages authentication/login api calls
+ * Add/remove/checks database for creditinials
+ */
+
 package com.mydomain.finalthesisbackend.controller;
 import com.mydomain.finalthesisbackend.dto.AuthRequestDTO;
 import com.mydomain.finalthesisbackend.dto.AuthResponseDTO;
@@ -26,7 +31,7 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
-
+    // login controller
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequestDTO authRequest){
         String token = authService.authenticate(authRequest.getUsername(), authRequest.getPassword());
@@ -34,10 +39,11 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponseDTO(token, "user", userId)); 
     }
 
-
+    // register controller
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody AuthRequestDTO authRequest) {
         try {
+            // set address to null until changed
             Address address = new Address();
             address.setStreetName(null);
             address.setCity(null);
@@ -56,6 +62,7 @@ public class AuthController {
         }
     }
 
+    // update-address should be in address controller folder.. will be updated
     @PostMapping("/update-address")
     public ResponseEntity<?> updateAddress (@RequestHeader("Authorization") String authHeader,  @RequestBody Address address) {
         try {
@@ -76,6 +83,7 @@ public class AuthController {
         }
     }
     
+    // get current address 
     @GetMapping("/get-address")
     public ResponseEntity<Object> getAddress(@RequestHeader("Authorization") String authHeader) {
         try {
@@ -104,7 +112,6 @@ public class AuthController {
     }
 
     // get user details - first, last and email address -
-
     @GetMapping("/get-user-details")
     public ResponseEntity<?> getUserDetails(@RequestHeader("Authorization") String authHeader) {
         try {

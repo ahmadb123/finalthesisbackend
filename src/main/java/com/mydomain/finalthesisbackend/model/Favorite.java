@@ -1,3 +1,7 @@
+/*
+ * favorite model 
+ * collection for database
+*/
 package com.mydomain.finalthesisbackend.model;
 
 import org.springframework.data.annotation.Id;

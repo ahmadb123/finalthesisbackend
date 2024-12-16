@@ -1,5 +1,9 @@
-package com.mydomain.finalthesisbackend.controller;
+/*
+ *Favorite controller allows customers (who are logged in) to save items
+ * In the favorite page frontend 
+*/
 
+package com.mydomain.finalthesisbackend.controller;
 import com.mydomain.finalthesisbackend.dto.FavoriteDTO;
 import com.mydomain.finalthesisbackend.model.Favorite;
 import com.mydomain.finalthesisbackend.service.FavoriteService;

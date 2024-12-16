@@ -1,3 +1,6 @@
+/*
+ * Address model -
+ */
 package com.mydomain.finalthesisbackend.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;

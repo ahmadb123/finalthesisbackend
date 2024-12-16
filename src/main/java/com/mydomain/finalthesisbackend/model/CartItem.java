@@ -1,3 +1,7 @@
+/*
+ * CartItem model 
+ * construction - id, name, price, quanitity, image
+ */
 package com.mydomain.finalthesisbackend.model;
 
 public class CartItem {

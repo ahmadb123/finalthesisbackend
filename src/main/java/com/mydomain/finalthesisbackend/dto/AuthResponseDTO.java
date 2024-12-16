@@ -1,3 +1,9 @@
+/*
+ * AuthResponseDTO
+ * This class serves as a Data Transfer Object (DTO) for sending authentication responses
+ * To transfer authentication-related data from the server to the client in a consistent format.
+ */
+
 package com.mydomain.finalthesisbackend.dto;
 
 public class AuthResponseDTO {

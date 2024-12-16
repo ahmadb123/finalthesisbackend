@@ -1,3 +1,7 @@
+/*
+ * AuthService- 
+ * Responsbile for functions and algorithms
+ */
 package com.mydomain.finalthesisbackend.service;
 import com.mydomain.finalthesisbackend.model.User;
 import com.mydomain.finalthesisbackend.repository.UserRepository;

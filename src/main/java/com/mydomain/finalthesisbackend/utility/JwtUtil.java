@@ -1,3 +1,7 @@
+/*
+ * JWT class
+ * sets JWT tokens for each user/guest 
+ */
 package com.mydomain.finalthesisbackend.utility;
 
 import io.jsonwebtoken.Jwts;
